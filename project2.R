@@ -1,6 +1,7 @@
 # Imports =====================================================================
 install.packages("caret")
 install.packages("ellipse")
+install.packages("C50")
 library(caret)
 library(ellipse)
 
