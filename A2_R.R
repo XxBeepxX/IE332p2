@@ -14,7 +14,7 @@ test <- dataset[-index,]
 control <- trainControl(method="cv", number=10)
 metric <- "Accuracy"     # from contingency tables: ratio of #(correctly predicted):(total #)
 
-# we will try a linear classifier, and a decision tree created using the CART algorithm
+# we will try a linear classifier, and a decision tree created using the Linear Support Vector Machines with Class Weights algorithm
 set.seed(1234)
 lossm <- matrix(c(0,5,2,0),nrow=2,ncol=2)
 fit.svm <- train(Species~., data=dataset, method="svmLinearWeights", preProcess = "pca", parms=list(loss=lossm), class_weight = 'balanced', metric=metric, trControl=control)
