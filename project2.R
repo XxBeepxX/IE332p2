@@ -1,20 +1,12 @@
-# Imports =====================================================================
-install.packages("caret")
-install.packages("ellipse")
-install.packages("C50")
-library(caret)
-library(ellipse)
+data <- read.csv("training_set.csv")
+#data <- training_set.2
 
-# Load Data ===================================================================
-i <- iris
-
-# change to 1s and 0s
-i$Species = as.factor(ifelse(i$Species == "setosa", "1", "0"))
-
-# partition the data
-index <- createDataPartition(i$Species,p = 0.75, list= FALSE)
-train <- i[index,]
-test <- i[-index,]
-
-# Train Models ================================================================
-set.seed(11)
+run_time <- system.time({
+  
+  
+  
+  
+posinst <- subset(data, class == "pos")
+neginst <- subset(data, class == "neg")
+})[3]
+print(paste("Run Time:", run_time, "seconds"))
