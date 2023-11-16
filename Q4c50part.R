@@ -29,7 +29,7 @@ set.seed(11)
 x <- train[,1:4]
 y <- train[,5]
 control <- trainControl(method="cv", number = 10,savePredictions = TRUE)#, classProbs=T)
-grid <- expand.grid(trials = c(1),model = c("tree", "rules"),winnow = c(TRUE, FALSE),cost = c(1:2))
+grid <- expand.grid(trials = c(1),model = c("tree", "rules"),winnow = c(TRUE, FALSE),cost = c(1:2.5))
 model<- train(x=x,y=y,tuneGrid=grid,trControl=control,method='C5.0Cost',verbose=FALSE, preProcess="pca")
 predictions <- model$pred
 
