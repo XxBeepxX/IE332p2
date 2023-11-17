@@ -96,3 +96,11 @@ confusionMatrix(rpartrp, train$Species)
 confusionMatrix(svmLinearWeightstep, test$Species)
 confusionMatrix(svmLinearWeightstrp, train$Species)
 
+# Exploratory Data Analysis ===================================================
+
+# Density Plots
+x <- i[,1:4]
+y <- i[,5]
+
+scales <- list(x=list(relation="free"), y=list(relation="free"))
+featurePlot(x=x, y=y, plot="density", scales=scales) # scales makes the x and y axes independent
