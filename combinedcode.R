@@ -21,7 +21,6 @@ i$Species = as.factor(ifelse(i$Species == "setosa", "1", "0"))
 index <- createDataPartition(i$Species,p = 0.75, list= FALSE)
 train <- i[index,]
 test <- i[-index,]
-length(test)
 set.seed(2895)
 
 # Train Models ================================================================
