@@ -13,8 +13,6 @@ library(C50)
 library(ellipse)
 library(e1071)
 
-
-
 # Load Data ===================================================================
 i <- iris
 # change to 1s and 0s
@@ -43,9 +41,6 @@ rpartmodel <- train(Species~., data=train, method="rpart", preProcess = "pca", p
 lossm <- matrix(c(0,5,2,0),nrow=2,ncol=2)
 svmLinearWeightsmodel <- train(Species~., data=train, method="svmLinearWeights", preProcess = "pca", parms=list(loss=lossm), class_weight = 'balanced', metric=metric, trControl=control)
 
-
-
-
 #plotting 
 
 library(pROC)
@@ -71,7 +66,6 @@ svmLinearWeightstrroc <- roc(as.numeric(train$Species), as.numeric(svmLinearWeig
 svmLinearWeightstep <- predict(svmLinearWeightsmodel, test)
 svmLinearWeightsteroc <- roc(as.numeric(test$Species), as.numeric(svmLinearWeightstep))
 
-
 #combined
 # Plot ROC curves on the same graph for training
 plot(c50trroc, col = "blue", lwd = 2, main = "ROC Curves for training", col.main = "black")
@@ -92,12 +86,14 @@ summary(results)
 
 #OLD VERSION OF PRINTING
 #C50
-#confusionMatrix(c50tep, test$Species)
-#confusionMatrix(c50trp, train$Species)
+confusionMatrix(c50tep, test$Species)
+confusionMatrix(c50trp, train$Species)
+
 #rpart
-#confusionMatrix(rparttep, test$Species)
-#confusionMatrix(rpartrp, train$Species)
+confusionMatrix(rparttep, test$Species)
+confusionMatrix(rpartrp, train$Species)
+
 #svmLinearWeights
-#confusionMatrix(svmLinearWeightstep, test$Species)
-#confusionMatrix(svmLinearWeightstrp, train$Species)
+confusionMatrix(svmLinearWeightstep, test$Species)
+confusionMatrix(svmLinearWeightstrp, train$Species)
 
