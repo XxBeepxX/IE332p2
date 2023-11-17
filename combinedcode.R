@@ -84,7 +84,6 @@ legend("bottomright", legend = c("c50", "rpart", "svmLinearWeights"), col = c("b
 results <- resamples(list(c50=c50model, rpart=rpartmodel, svmLinearWeights=svmLinearWeightsmodel))
 summary(results)
 
-#OLD VERSION OF PRINTING
 #C50
 confusionMatrix(c50tep, test$Species)
 confusionMatrix(c50trp, train$Species)
