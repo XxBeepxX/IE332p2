@@ -13,6 +13,8 @@ library(C50)
 library(ellipse)
 library(e1071)
 
+
+
 # Load Data ===================================================================
 i <- iris
 # change to 1s and 0s
@@ -23,6 +25,7 @@ train <- i[index,]
 test <- i[-index,]
 length(test)
 set.seed(2895)
+
 # Train Models ================================================================
 #C50 model
 x <- train[,1:4]
@@ -30,18 +33,18 @@ y <- train[,5]
 control <- trainControl(method="cv", number = 10,savePredictions = TRUE)#, classProbs=T)
 grid <- expand.grid(trials = c(1),model = c("tree", "rules"),winnow = c(TRUE, FALSE),cost = c(1:2))
 c50model <- train(x=x,y=y,tuneGrid=grid,trControl=control,method='C5.0Cost',verbose=FALSE, preProcess="pca")
-print(c50model)
 
 #Rpart model
 metric <- "Accuracy"
 lossm <- matrix(c(0,5,2,0),nrow=2,ncol=2)
-rpartmodel <- train(Species~., data=i, method="rpart", preProcess = "pca", parms=list(loss=lossm), metric=metric, trControl=control, cp=0.5)
-print(rpartmodel)
+rpartmodel <- train(Species~., data=train, method="rpart", preProcess = "pca", parms=list(loss=lossm), metric=metric, trControl=control, cp=0.5)
 
-#e1071 model
+#svmLinearWeights model
 lossm <- matrix(c(0,5,2,0),nrow=2,ncol=2)
-e1071model <- train(Species~., data=i, method="svmLinearWeights", preProcess = "pca", parms=list(loss=lossm), class_weight = 'balanced', metric=metric, trControl=control)
-print(e1071model)
+svmLinearWeightsmodel <- train(Species~., data=train, method="svmLinearWeights", preProcess = "pca", parms=list(loss=lossm), class_weight = 'balanced', metric=metric, trControl=control)
+
+
+
 
 #plotting 
 
@@ -61,42 +64,40 @@ rpartrroc <- roc(as.numeric(train$Species), as.numeric(rpartrp))
 rparttep <- predict(rpartmodel,test)
 rpartteroc <- roc(as.numeric(test$Species), as.numeric(rparttep))
 
-#e1071 training predictions
-e1071trp <- predict(e1071model, train)
-e1071trroc <- roc(as.numeric(train$Species), as.numeric(e1071trp))
-#e1071 testing predictions
-e1071tep <- predict(e1071model, test)
-e1071teroc <- roc(as.numeric(test$Species), as.numeric(e1071tep))
+#svmLinearWeights training predictions
+svmLinearWeightstrp <- predict(svmLinearWeightsmodel, train)
+svmLinearWeightstrroc <- roc(as.numeric(train$Species), as.numeric(svmLinearWeightstrp))
+#svmLinearWeights testing predictions
+svmLinearWeightstep <- predict(svmLinearWeightsmodel, test)
+svmLinearWeightsteroc <- roc(as.numeric(test$Species), as.numeric(svmLinearWeightstep))
+
 
 #combined
 # Plot ROC curves on the same graph for training
 plot(c50trroc, col = "blue", lwd = 2, main = "ROC Curves for training", col.main = "black")
 lines(rpartrroc, col = "red", lwd = 2)
-lines(e1071trroc, col = "green", lwd = 2)
-legend("bottomright", legend = c("c50", "rpart", "e1071"), col = c("blue", "red", "green"), lty = 1, lwd = 2)
+lines(svmLinearWeightstrroc, col = "green", lwd = 2)
+legend("bottomright", legend = c("c50", "rpart", "svmLinearWeights"), col = c("blue", "red", "green"), lty = 1, lwd = 2)
 
 # Plot ROC curves on the same graph for testing
 plot(c50teroc, col = "blue", lwd = 2, main = "ROC Curves for testing", col.main = "black")
 lines(rpartteroc, col = "red", lwd = 2)
-lines(e1071teroc, col = "green", lwd = 2)
-legend("bottomright", legend = c("c50", "rpart", "e1071"), col = c("blue", "red", "green"), lty = 1, lwd = 2)
+lines(svmLinearWeightsteroc, col = "green", lwd = 2)
+legend("bottomright", legend = c("c50", "rpart", "svmLinearWeights"), col = c("blue", "red", "green"), lty = 1, lwd = 2)
 
 #printing all the confusion matrixs
 
-results <- resamples(list(c50=c50model, rpart=rpartmodel, e1071=e1071model))
+results <- resamples(list(c50=c50model, rpart=rpartmodel, svmLinearWeights=svmLinearWeightsmodel))
 summary(results)
 
-#OLD VERSION OF PRINTING (Print individual confusion matrix per model)
-
+#OLD VERSION OF PRINTING
 #C50
-confusionMatrix(c50tep, test$Species)
-confusionMatrix(c50trp, train$Species)
-
+#confusionMatrix(c50tep, test$Species)
+#confusionMatrix(c50trp, train$Species)
 #rpart
-confusionMatrix(rparttep, test$Species)
-confusionMatrix(rpartrp, train$Species)
-
-#e1071
-confusionMatrix(e1071tep, test$Species)
-confusionMatrix(e1071trp, train$Species)
+#confusionMatrix(rparttep, test$Species)
+#confusionMatrix(rpartrp, train$Species)
+#svmLinearWeights
+#confusionMatrix(svmLinearWeightstep, test$Species)
+#confusionMatrix(svmLinearWeightstrp, train$Species)
 
