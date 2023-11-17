@@ -31,15 +31,18 @@ y <- train[,5]
 control <- trainControl(method="cv", number = 10,savePredictions = TRUE)#, classProbs=T)
 grid <- expand.grid(trials = c(1),model = c("tree", "rules"),winnow = c(TRUE, FALSE),cost = c(1:2))
 c50model <- train(x=x,y=y,tuneGrid=grid,trControl=control,method='C5.0Cost',verbose=FALSE, preProcess="pca")
+print(c50model)
 
 #Rpart model
 metric <- "Accuracy"
 lossm <- matrix(c(0,5,2,0),nrow=2,ncol=2)
 rpartmodel <- train(Species~., data=train, method="rpart", preProcess = "pca", parms=list(loss=lossm), metric=metric, trControl=control, cp=0.5)
+print(rpartmodel)
 
 #svmLinearWeights model
 lossm <- matrix(c(0,5,2,0),nrow=2,ncol=2)
 svmLinearWeightsmodel <- train(Species~., data=train, method="svmLinearWeights", preProcess = "pca", parms=list(loss=lossm), class_weight = 'balanced', metric=metric, trControl=control)
+print(svmLinearWeightsmodel)
 
 #plotting 
 
